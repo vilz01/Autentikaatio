@@ -7,8 +7,15 @@ namespace Autentikaatio
 {
     public class TokenService
     {
+        private readonly IConfiguration _configuration;
+
+        public TokenService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public string GenerateToken(string username, bool isAdmin)
         {
+            var secretKeyString = _configuration["ApiKey"];
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key_that_is_at_least_32_bytes_long"));
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 

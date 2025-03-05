@@ -14,9 +14,12 @@ namespace Autentikaatio.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private readonly IConfiguration _configuration;
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         [HttpGet("OpenGet")]
@@ -51,13 +54,13 @@ namespace Autentikaatio.Controllers
             if (credentials.Username == "testuser" && credentials.Password == "testpassword")
             {
                 // Jos tunnistetiedot ovat oikein, generoi JWT-token ja palauta se
-                var tokenService = new TokenService(); // Oletetaan, että TokenService on luokka, joka generoi tokenin
+                var tokenService = new TokenService(_configuration); // Oletetaan, että TokenService on luokka, joka generoi tokenin
                 var token = tokenService.GenerateToken(credentials.Username, false);
                 return Ok(new { Token = token });
             }
             else if (credentials.Username == "admin" && credentials.Password == "admin")
             {
-                var tokenService = new TokenService(); // Oletetaan, että TokenService on luokka, joka generoi tokenin
+                var tokenService = new TokenService(_configuration); // Oletetaan, että TokenService on luokka, joka generoi tokenin
                 var token = tokenService.GenerateToken(credentials.Username, true);
                 return Ok(new { Token = token });
             }
